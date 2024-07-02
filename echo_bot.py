@@ -7,7 +7,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 load_dotenv()
 
 TG_TOKEN = os.getenv('ciuse_bot')
-# print(TG_TOKEN)
 
 logging.basicConfig(filename='my_log.log',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
