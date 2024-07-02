@@ -1,8 +1,9 @@
 import os
 import logging
+import re
 from dotenv import load_dotenv
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -21,11 +22,42 @@ def start(update: Update, context) -> None:
 def echo(update: Update, context) -> None:
     update.message.reply_text(update.message.text)
 
+def my_help(update: Update, context) -> None:
+    update.message.reply_text('No help!')
+
+def find_tel_numbers_command(update: Update, context) -> None:
+    update.message.reply_text('Давай, где искать: ')
+    return 'find_tel_numbers'
+
+def find_tel_numbers(update: Update, context):
+    user_input = update.message.text
+    find_pat = re.compile(r'8 \(\d{3}\) \d{3}-\d{2}-\d{2}')
+    find_result = find_pat.findall(user_input)
+
+    if find_result:
+        str_numbers = ''
+        for my_index in range(len(find_result)):
+            str_numbers += f'{my_index + 1}.\t{find_result[my_index]}\n'
+
+        update.message.reply_text(str_numbers)
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('Нет номеров!')
+        # return False
 
 def run():
     updater = Updater(TG_TOKEN, use_context=True)
     my_disp = updater.dispatcher
+
+    find_tel_numbers_handler = ConversationHandler(
+        entry_points=[CommandHandler('find_tel_numbers', find_tel_numbers_command)],
+        states={'find_tel_numbers': [MessageHandler(Filters.text & ~Filters.command, find_tel_numbers)], },
+        fallbacks=[])
+
     my_disp.add_handler(CommandHandler('start', start))
+    my_disp.add_handler(CommandHandler('help', my_help))
+    my_disp.add_handler(find_tel_numbers_handler)
     my_disp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
     updater.start_polling()
     updater.idle()
