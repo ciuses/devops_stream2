@@ -3,7 +3,11 @@ import logging
 import re
 from dotenv import load_dotenv
 from telegram import Update, ForceReply
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, ConversationHandler
+from telegram.ext import (Updater,
+                          CommandHandler,
+                          MessageHandler,
+                          Filters,
+                          ConversationHandler)
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -44,7 +48,7 @@ def find_tel_numbers(update: Update, context):
 
     else:
         update.message.reply_text('Нет номеров!')
-        # return False
+        return ConversationHandler.END
 
 def run():
     updater = Updater(TG_TOKEN, use_context=True)
