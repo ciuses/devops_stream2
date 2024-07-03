@@ -38,7 +38,7 @@ def find_tel_numbers_command(update: Update, context) -> None:
 
 def find_tel_numbers(update: Update, context):
     user_input = update.message.text
-    find_pat = re.compile(r'8 \(\d{3}\) \d{3}-\d{2}-\d{2}')  # [\+7|8][\d(\s-]*[\d)\s]*
+    find_pat = re.compile(r'[\+7|8][\d(\s-]*[\d)\s]*')  # [\+7|8][\d(\s-]*[\d)\s]*
     find_result = find_pat.findall(user_input)
 
     if find_result:
@@ -72,7 +72,7 @@ def find_emails(update: Update, context):
         return ConversationHandler.END
 
     else:
-        update.message.reply_text('Нет номеров!')
+        update.message.reply_text('Нет ни каких имэйлов!')
         return ConversationHandler.END
 
 
