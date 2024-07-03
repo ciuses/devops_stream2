@@ -82,10 +82,33 @@ def check_pas_command(update: Update, context) -> None:
 
 
 def check_pas(update: Update, context):
+
     user_input = update.message.text
-    print(user_input)
-    # update.message.reply_text(str_numbers)
-    return ConversationHandler.END
+
+    if not re.search(r'^.{8,}$', user_input):
+        update.message.reply_text('Ваш пароль мог быть и подлиннее, обидно как то даже.')
+        return ConversationHandler.END
+
+    elif not re.search(r'(?=.*[A-Z])', user_input):
+        update.message.reply_text('Не нашёл букв по крупнее, мелочь одна.')
+        return ConversationHandler.END
+
+    elif not re.search(r'(?=.*[a-z])', user_input):
+        update.message.reply_text('Не капси, добавь пару мелких букв.')
+        return ConversationHandler.END
+
+    elif not re.search(r'(?=.*[0-9])', user_input):
+        update.message.reply_text('А где же числа?')
+        return ConversationHandler.END
+
+    elif not re.search(r'(?=.*[!@#$%^&*()])', user_input):
+        update.message.reply_text('Отсыпь спецсимволов не жадничай.')
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('Впечатляет, всё как надо, обнимаю твои мысли, всё на созвоне.')
+        return ConversationHandler.END
+
 
 
 
@@ -95,7 +118,6 @@ def run():
 
     '''Перехват сообщений'''
     echo_handler = MessageHandler(Filters.text & ~Filters.command, echo)
-
     '''Перехват команд'''
     start_handler = CommandHandler('start', start)
     help_handler = CommandHandler('help', my_help)
@@ -123,6 +145,7 @@ def run():
     my_disp.add_handler(find_tel_numbers_handler)
     my_disp.add_handler(find_emails_handler)
     my_disp.add_handler(check_pas_handler)
+
     my_disp.add_handler(start_handler)
     my_disp.add_handler(help_handler)
     my_disp.add_handler(echo_handler)
