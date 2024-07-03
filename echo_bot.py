@@ -76,6 +76,19 @@ def find_emails(update: Update, context):
         return ConversationHandler.END
 
 
+def check_pas_command(update: Update, context) -> None:
+    update.message.reply_text('Мне нужен твой байк, простите, пароль: ')
+    return 'check_pas'
+
+
+def check_pas(update: Update, context):
+    user_input = update.message.text
+    print(user_input)
+    # update.message.reply_text(str_numbers)
+    return ConversationHandler.END
+
+
+
 def run():
     updater = Updater(TG_TOKEN, use_context=True)
     my_disp = updater.dispatcher
@@ -99,10 +112,17 @@ def run():
         states={'find_emails': [MessageHandler(Filters.text & ~Filters.command, find_emails)], },
         fallbacks=[])
 
+    '''Перехват диалога пароля'''
+    check_pas_handler = ConversationHandler(
+        entry_points=[CommandHandler('verify_password', check_pas_command)],
+        states={'check_pas': [MessageHandler(Filters.text & ~Filters.command, check_pas)], },
+        fallbacks=[])
+
 
     '''Диспетчеры'''
     my_disp.add_handler(find_tel_numbers_handler)
     my_disp.add_handler(find_emails_handler)
+    my_disp.add_handler(check_pas_handler)
     my_disp.add_handler(start_handler)
     my_disp.add_handler(help_handler)
     my_disp.add_handler(echo_handler)
