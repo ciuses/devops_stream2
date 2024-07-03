@@ -31,12 +31,12 @@ def my_help(update: Update, context) -> None:
     update.message.reply_text('No help!')
 
 
-def find_tel_numbers_command(update: Update, context) -> None:
+def find_tel_numbers_command(update: Update, context) -> str:
     update.message.reply_text('Давай, где искать: ')
     return 'find_tel_numbers'
 
 
-def find_tel_numbers(update: Update, context):
+def find_tel_numbers(update: Update, context) -> int:
     user_input = update.message.text
     find_pat = re.compile(r'[\+7|8][\d(\s-]*[\d)\s]*')  # [\+7|8][\d(\s-]*[\d)\s]*
     find_result = find_pat.findall(user_input)
@@ -47,18 +47,18 @@ def find_tel_numbers(update: Update, context):
             str_numbers += f'{my_index + 1}.\t{find_result[my_index]}\n'
 
         update.message.reply_text(str_numbers)
-        return ConversationHandler.END
+        return ConversationHandler.END # <class 'int'> -1
 
     else:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
-def find_emails_command(update: Update, context) -> None:
+def find_emails_command(update: Update, context) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
     return 'find_emails'
 
 
-def find_emails(update: Update, context):
+def find_emails(update: Update, context) -> int:
     user_input = update.message.text
     find_pat = re.compile(r'[\w\.-]+@[\w-]+\.[a-zа-я]{2,9}')
     find_result = find_pat.findall(user_input)
@@ -76,12 +76,12 @@ def find_emails(update: Update, context):
         return ConversationHandler.END
 
 
-def check_pas_command(update: Update, context) -> None:
+def check_pas_command(update: Update, context) -> str:
     update.message.reply_text('Мне нужен твой байк, простите, пароль: ')
     return 'check_pas'
 
 
-def check_pas(update: Update, context):
+def check_pas(update: Update, context) -> int:
 
     user_input = update.message.text
 
@@ -157,3 +157,4 @@ def run():
 
 if __name__ == '__main__':
     run()
+
