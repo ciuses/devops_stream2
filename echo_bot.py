@@ -26,16 +26,19 @@ def start(update: Update, context) -> None:
 def echo(update: Update, context) -> None:
     update.message.reply_text(update.message.text)
 
+
 def my_help(update: Update, context) -> None:
     update.message.reply_text('No help!')
+
 
 def find_tel_numbers_command(update: Update, context) -> None:
     update.message.reply_text('Давай, где искать: ')
     return 'find_tel_numbers'
 
+
 def find_tel_numbers(update: Update, context):
     user_input = update.message.text
-    find_pat = re.compile(r'8 \(\d{3}\) \d{3}-\d{2}-\d{2}')
+    find_pat = re.compile(r'8 \(\d{3}\) \d{3}-\d{2}-\d{2}')  # [\+7|8][\d(\s-]*[\d)\s]*
     find_result = find_pat.findall(user_input)
 
     if find_result:
@@ -50,21 +53,33 @@ def find_tel_numbers(update: Update, context):
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
+
 def run():
     updater = Updater(TG_TOKEN, use_context=True)
     my_disp = updater.dispatcher
 
+    '''Перехват диалога'''
     find_tel_numbers_handler = ConversationHandler(
         entry_points=[CommandHandler('find_tel_numbers', find_tel_numbers_command)],
         states={'find_tel_numbers': [MessageHandler(Filters.text & ~Filters.command, find_tel_numbers)], },
         fallbacks=[])
 
-    my_disp.add_handler(CommandHandler('start', start))
-    my_disp.add_handler(CommandHandler('help', my_help))
+    '''Перехват сообщений'''
+    echo_handler = MessageHandler(Filters.text & ~Filters.command, echo)
+
+    '''Перехват команд'''
+    start_handler = CommandHandler('start', start)
+    help_handler = CommandHandler('help', my_help)
+
+    '''Диспетчеры'''
     my_disp.add_handler(find_tel_numbers_handler)
-    my_disp.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))
+    my_disp.add_handler(start_handler)
+    my_disp.add_handler(help_handler)
+    my_disp.add_handler(echo_handler)
+
     updater.start_polling()
     updater.idle()
+
 
 
 if __name__ == '__main__':
