@@ -9,6 +9,12 @@ from telegram.ext import (Updater,
                           Filters,
                           ConversationHandler)
 
+from linux_funcs import (linux_release,
+                         linux_df,
+                         linux_free,
+                         linux_uptime,
+                         linux_uname)
+
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
 
@@ -126,6 +132,11 @@ def run():
     '''Перехват команд'''
     start_handler = CommandHandler('start', start)
     help_handler = CommandHandler('help', my_help)
+    linux_release_handler = CommandHandler('get_release', linux_release)
+    linux_uname_handler = CommandHandler('get_uname', linux_uname)
+    linux_uptime_handler = CommandHandler('get_uptime', linux_uptime)
+    linux_df_handler = CommandHandler('get_df', linux_df)
+    linux_free_handler = CommandHandler('get_free', linux_free)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -153,6 +164,13 @@ def run():
 
     my_disp.add_handler(start_handler)
     my_disp.add_handler(help_handler)
+
+    my_disp.add_handler(linux_release_handler)
+    my_disp.add_handler(linux_uname_handler)
+    my_disp.add_handler(linux_uptime_handler)
+    my_disp.add_handler(linux_df_handler)
+    my_disp.add_handler(linux_free_handler)
+
     my_disp.add_handler(echo_handler)
 
     updater.start_polling()
