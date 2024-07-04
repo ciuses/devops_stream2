@@ -28,7 +28,12 @@ def echo(update: Update, context) -> None:
 
 
 def my_help(update: Update, context) -> None:
-    update.message.reply_text('No help!')
+    help_str = ('/start - поприветствует\n'
+                '/help - список доступных команд\n'
+                '/find_tel_numbers - поиск телефона в тексте\n'
+                '/find_emails - поиск электронного адреса в тексте\n'
+                '/verify_password - валидация пароля')
+    update.message.reply_text(help_str)
 
 
 def find_tel_numbers_command(update: Update, context) -> str:
