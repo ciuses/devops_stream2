@@ -1,8 +1,6 @@
 import os
 import logging
-import re
 from dotenv import load_dotenv
-from telegram import Update, ForceReply
 from telegram.ext import (Updater,
                           CommandHandler,
                           MessageHandler,

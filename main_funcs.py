@@ -7,11 +7,6 @@ def start(update: Update, context) -> None:
     user = update.effective_user
     update.message.reply_text(f'Дороу {user.first_name}')
 
-
-def echo(update: Update, context) -> None:
-    update.message.reply_text(update.message.text)
-
-
 def my_help(update: Update, context) -> None:
     help_str = ('/start - поприветствует\n'
                 '/help - список доступных команд\n'
@@ -20,11 +15,12 @@ def my_help(update: Update, context) -> None:
                 '/verify_password - валидация пароля')
     update.message.reply_text(help_str)
 
+def echo(update: Update, context) -> None:
+    update.message.reply_text(update.message.text)
 
 def find_tel_numbers_command(update: Update, context) -> str:
     update.message.reply_text('Давай, где искать: ')
     return 'find_tel_numbers'
-
 
 def find_tel_numbers(update: Update, context) -> int:
     user_input = update.message.text
@@ -47,7 +43,6 @@ def find_emails_command(update: Update, context) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
     return 'find_emails'
 
-
 def find_emails(update: Update, context) -> int:
     user_input = update.message.text
     find_pat = re.compile(r'[\w\.-]+@[\w-]+\.[a-zа-я]{2,9}')
@@ -65,11 +60,9 @@ def find_emails(update: Update, context) -> int:
         update.message.reply_text('Нет ни каких имэйлов!')
         return ConversationHandler.END
 
-
 def check_pas_command(update: Update, context) -> str:
     update.message.reply_text('Мне нужен твой байк, простите, пароль: ')
     return 'check_pas'
-
 
 def check_pas(update: Update, context) -> int:
 
