@@ -13,7 +13,8 @@ from linux_funcs import (linux_release,
                          linux_df,
                          linux_free,
                          linux_uptime,
-                         linux_uname)
+                         linux_uname,
+                         linux_auths)
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -137,6 +138,7 @@ def run():
     linux_uptime_handler = CommandHandler('get_uptime', linux_uptime)
     linux_df_handler = CommandHandler('get_df', linux_df)
     linux_free_handler = CommandHandler('get_free', linux_free)
+    linux_auths_handler = CommandHandler('get_auths', linux_auths)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -165,11 +167,13 @@ def run():
     my_disp.add_handler(start_handler)
     my_disp.add_handler(help_handler)
 
+    '''Linux'''
     my_disp.add_handler(linux_release_handler)
     my_disp.add_handler(linux_uname_handler)
     my_disp.add_handler(linux_uptime_handler)
     my_disp.add_handler(linux_df_handler)
     my_disp.add_handler(linux_free_handler)
+    my_disp.add_handler(linux_auths_handler)
 
     my_disp.add_handler(echo_handler)
 

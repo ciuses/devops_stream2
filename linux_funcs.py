@@ -31,7 +31,6 @@ def get_info_from_linux_many(my_comma = 'ls -la'):
     cli.close()
     return raw_data
 
-
 def get_info_from_linux_single(my_comma = 'ls -la') -> str:
 
     cli = paramiko.SSHClient()
@@ -64,7 +63,10 @@ def linux_free(update: Update, context) -> None:
     my_release = get_info_from_linux_single(my_comma='free -h')
     update.message.reply_text(my_release)
 
+def linux_auths(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='last -n 10')
+    update.message.reply_text(my_release)
 
 if __name__ == '__main__':
-    print(get_info_from_linux_single(my_comma='uname -a'))
+    print(get_info_from_linux_single(my_comma='ss -l'))
     # print(get_info_from_linux_many())
