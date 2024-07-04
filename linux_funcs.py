@@ -10,38 +10,34 @@ log = os.getenv('user')
 pa = os.getenv('pass')
 
 
-def get_info_from_linux_many(my_comma = 'ls -la'):
+def get_info_from_linux_single(my_comma = 'ls -la', superuser = None) -> str:
 
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     cli.connect(hostname=ip, username=log, password=pa)
 
-    raw_data = None
+    if superuser:
+        raw_data = None
+        with cli.invoke_shell() as terminal:
+            time.sleep(1)
+            terminal.send('su -l\n')
+            time.sleep(1)
+            terminal.send(f'{pa}\n')
+            time.sleep(2)
+            terminal.send(f'{my_comma}\n')
+            time.sleep(2)
+            raw_data = terminal.recv(9999).decode()
 
-    with cli.invoke_shell() as terminal:
-        time.sleep(1)
-        terminal.send('su -l\n')
-        time.sleep(1)
-        terminal.send(f'{pa}\n')
-        time.sleep(2)
-        terminal.send(f'{my_comma}\n')
-        time.sleep(2)
-        raw_data = terminal.recv(9999).decode()
+        cli.close()
+        return raw_data
 
-    cli.close()
-    return raw_data
+    else:
+        _, s_out, s_err = cli.exec_command(my_comma, timeout=None)
+        raw_data = s_out.read() + s_err.read()
+        norm_str = raw_data.decode()
+        cli.close()
 
-def get_info_from_linux_single(my_comma = 'ls -la') -> str:
-
-    cli = paramiko.SSHClient()
-    cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    cli.connect(hostname=ip, username=log, password=pa)
-    _, s_out, s_err = cli.exec_command(my_comma, timeout=None)
-    raw_data = s_out.read() + s_err.read()
-    norm_str = raw_data.decode()
-    cli.close()
-
-    return norm_str
+        return norm_str
 
 def linux_release(update: Update, context) -> None:
     my_release = get_info_from_linux_single(my_comma='lsb_release -a')
@@ -68,5 +64,6 @@ def linux_auths(update: Update, context) -> None:
     update.message.reply_text(my_release)
 
 if __name__ == '__main__':
-    print(get_info_from_linux_single(my_comma='ss -l'))
+    print(get_info_from_linux_single())
+    print(get_info_from_linux_single(superuser=True))
     # print(get_info_from_linux_many())
