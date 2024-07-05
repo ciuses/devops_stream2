@@ -12,7 +12,9 @@ from linux_funcs import (linux_release,
                          linux_free,
                          linux_uptime,
                          linux_uname,
-                         linux_auths)
+                         linux_auths,
+                         linux_w,
+                         linux_mpstat)
 
 from main_funcs import (echo,
                         start,
@@ -50,6 +52,8 @@ def run():
     linux_df_handler = CommandHandler('get_df', linux_df)
     linux_free_handler = CommandHandler('get_free', linux_free)
     linux_auths_handler = CommandHandler('get_auths', linux_auths)
+    linux_w_handler = CommandHandler('get_w', linux_w)
+    linux_mpstat_handler = CommandHandler('get_mpstat', linux_mpstat)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -85,6 +89,8 @@ def run():
     my_disp.add_handler(linux_df_handler)
     my_disp.add_handler(linux_free_handler)
     my_disp.add_handler(linux_auths_handler)
+    my_disp.add_handler(linux_w_handler)
+    my_disp.add_handler(linux_mpstat_handler)
 
     my_disp.add_handler(echo_handler)
 
