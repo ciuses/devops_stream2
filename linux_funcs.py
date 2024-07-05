@@ -10,7 +10,7 @@ log = os.getenv('user')
 pa = os.getenv('pass')
 
 
-def get_info_from_linux_single(my_comma = 'ls -la', superuser = None) -> str:
+def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
 
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -63,7 +63,15 @@ def linux_auths(update: Update, context) -> None:
     my_release = get_info_from_linux_single(my_comma='last -n 10')
     update.message.reply_text(my_release)
 
+def linux_w(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='w')
+    update.message.reply_text(my_release)
+
+def linux_mpstat(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='mpstat')
+    update.message.reply_text(my_release)
+
 if __name__ == '__main__':
-    print(get_info_from_linux_single())
-    print(get_info_from_linux_single(superuser=True))
+    print(get_info_from_linux_single(my_comma='mpstat'))
+    # print(get_info_from_linux_single(superuser=True))
     # print(get_info_from_linux_many())
