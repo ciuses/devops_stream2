@@ -14,7 +14,10 @@ from linux_funcs import (linux_release,
                          linux_uname,
                          linux_auths,
                          linux_w,
-                         linux_mpstat)
+                         linux_mpstat,
+                         linux_apt_list,
+                         linux_apt_list_one,
+                         linux_apt_list_many, linux_apt_list_one_get)
 
 from main_funcs import (echo,
                         start,
@@ -73,6 +76,14 @@ def run():
         states={'check_pas': [MessageHandler(Filters.text & ~Filters.command, check_pas)], },
         fallbacks=[])
 
+    '''Перехват диалога apt list'''
+    apt_list_handler = ConversationHandler(
+        entry_points=[CommandHandler('get_apt_list', linux_apt_list)],
+        states={'linux_apt_list_one': [MessageHandler(Filters.regex('^(Один)$'), linux_apt_list_one),
+                                       MessageHandler(Filters.regex('^(Много)$'), linux_apt_list_many),
+                                       MessageHandler(Filters.text, linux_apt_list_one_get)], },
+        fallbacks=[])
+
 
     '''Диспетчеры'''
     my_disp.add_handler(find_tel_numbers_handler)
@@ -91,6 +102,7 @@ def run():
     my_disp.add_handler(linux_auths_handler)
     my_disp.add_handler(linux_w_handler)
     my_disp.add_handler(linux_mpstat_handler)
+    my_disp.add_handler(apt_list_handler)
 
     my_disp.add_handler(echo_handler)
 
