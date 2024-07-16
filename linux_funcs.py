@@ -119,7 +119,7 @@ def all_install_packages(update, _):
     ]
 
     rmk = InlineKeyboardMarkup(k_board)
-    my_all_packages = get_info_from_linux_single(my_comma='apt list')
+    my_all_packages = get_info_from_linux_single(my_comma='apt list --installed')
     quiry.edit_message_text(text=my_all_packages, reply_markup=rmk)
     return 'first_level'
 
@@ -134,7 +134,8 @@ def all_up_services(update, _):
     ]
 
     rmk = InlineKeyboardMarkup(k_board)
-    my_up_services = get_info_from_linux_single(my_comma='apt list')  # todo указать комаду сервисов
+    my_up_services = get_info_from_linux_single(my_comma='systemctl list-units --type service --state running',
+                                                superuser=True)
     quiry.edit_message_text(text=my_up_services, reply_markup=rmk)
     return 'first_level'
 
@@ -150,7 +151,7 @@ def single_package_get(update, _):
 
 def single_package_post(update, _):
     user_input = update.message.text
-    my_single_package = get_info_from_linux_single(my_comma=f'apt list | grep {user_input}')
+    my_single_package = get_info_from_linux_single(my_comma=f'apt list --installed | grep {user_input}')
     update.message.reply_text(my_single_package)
     return 'second_level'
 
@@ -166,7 +167,8 @@ def single_service_get(update, _):
 
 def single_service_post(update, _):
     user_input = update.message.text
-    my_single_service = get_info_from_linux_single(my_comma=f'apt list | grep {user_input}')
+    my_single_service = get_info_from_linux_single(my_comma=f'systemctl list-units --type service | grep {user_input}',
+                                                   superuser=True)
     update.message.reply_text(my_single_service)
     return 'third_level'
 
