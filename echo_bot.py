@@ -5,7 +5,8 @@ from telegram.ext import (Updater,
                           CommandHandler,
                           MessageHandler,
                           Filters,
-                          ConversationHandler)
+                          ConversationHandler,
+                          CallbackQueryHandler)
 
 from linux_funcs import (linux_release,
                          linux_df,
@@ -17,7 +18,15 @@ from linux_funcs import (linux_release,
                          linux_mpstat,
                          linux_apt_list,
                          linux_apt_list_one,
-                         linux_apt_list_many, linux_apt_list_one_get)
+                         linux_apt_list_many,
+                         linux_apt_list_one_get,
+                         linux_packages_services,
+                         all_install_packages,
+                         all_up_services,
+                         single_package_get,
+                         single_service_get,
+                         single_package_post,
+                         single_service_post)
 
 from main_funcs import (echo,
                         start,
@@ -84,6 +93,18 @@ def run():
                                        MessageHandler(Filters.text, linux_apt_list_one_get)], },
         fallbacks=[])
 
+    '''Перехват деалога запроса пакетов и сервисов'''
+    decision_tree = ConversationHandler(
+        entry_points=[CommandHandler('packages_services', linux_packages_services)],
+        states={'first_level': [CallbackQueryHandler(all_install_packages, pattern='^all_packages$'),
+                                CallbackQueryHandler(all_up_services, pattern='^all_services$'),
+                                CallbackQueryHandler(single_package_get, pattern='^single_package$'),
+                                CallbackQueryHandler(single_service_get, pattern='^single_service$'),],
+
+                'second_level': [MessageHandler(Filters.text & ~Filters.command, single_package_post),],
+                'third_level': [MessageHandler(Filters.text & ~Filters.command, single_service_post),]
+                },
+        fallbacks=[CommandHandler('packages_services', linux_packages_services)])
 
     '''Диспетчеры'''
     my_disp.add_handler(find_tel_numbers_handler)
@@ -103,6 +124,7 @@ def run():
     my_disp.add_handler(linux_w_handler)
     my_disp.add_handler(linux_mpstat_handler)
     my_disp.add_handler(apt_list_handler)
+    my_disp.add_handler(decision_tree)
 
     my_disp.add_handler(echo_handler)
 
@@ -113,4 +135,4 @@ def run():
 
 if __name__ == '__main__':
     run()
-
+    #TODO дописать отправку из файла

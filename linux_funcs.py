@@ -2,7 +2,7 @@ import os
 import time
 import paramiko
 from dotenv import load_dotenv
-from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove
+from telegram import Update, ReplyKeyboardMarkup, ReplyKeyboardRemove, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ConversationHandler
 
 load_dotenv()
@@ -93,6 +93,82 @@ def linux_apt_list_many(update: Update, _): # выходит большой сп
     my_release = get_info_from_linux_single(my_comma='apt list')
     update.message.reply_text(my_release)
     return ConversationHandler.END
+
+def linux_packages_services(update, _):
+
+    k_board = [
+        [InlineKeyboardButton('Получить список всех установленных пакетов', callback_data='all_packages')],
+        [InlineKeyboardButton('Получить список всех запущенных служб', callback_data='all_services'),],
+        [InlineKeyboardButton('Получить информацию о конкретном пакете', callback_data='single_package'),],
+        [InlineKeyboardButton('Получить информацию о конкретной службе', callback_data='single_service'),],
+    ]
+
+    mrk = InlineKeyboardMarkup(k_board)
+    update.message.reply_text(text='Выберете один из вариантов получения информации о пакетах или службах:',
+                              reply_markup=mrk)
+    return 'first_level'
+
+def all_install_packages(update, _):
+    quiry = update.callback_query
+    quiry.answer()
+
+    k_board = [
+        [InlineKeyboardButton('Получить список всех запущенных служб', callback_data='all_services'),],
+        [InlineKeyboardButton('Получить информацию о конкретном пакете', callback_data='single_package'),],
+        [InlineKeyboardButton('Получить информацию о конкретной службе', callback_data='single_service'),],
+    ]
+
+    rmk = InlineKeyboardMarkup(k_board)
+    my_all_packages = get_info_from_linux_single(my_comma='apt list')
+    quiry.edit_message_text(text=my_all_packages, reply_markup=rmk)
+    return 'first_level'
+
+def all_up_services(update, _):
+    quiry = update.callback_query
+    quiry.answer()
+
+    k_board = [
+        [InlineKeyboardButton('Получить список всех установленных пакетов', callback_data='all_packages'),],
+        [InlineKeyboardButton('Получить информацию о конкретном пакете', callback_data='single_package'),],
+        [InlineKeyboardButton('Получить информацию о конкретной службе', callback_data='single_service'),],
+    ]
+
+    rmk = InlineKeyboardMarkup(k_board)
+    my_up_services = get_info_from_linux_single(my_comma='apt list')  # todo указать комаду сервисов
+    quiry.edit_message_text(text=my_up_services, reply_markup=rmk)
+    return 'first_level'
+
+
+def single_package_get(update, _):
+    quiry = update.callback_query
+    quiry.answer()
+    k_board = [[InlineKeyboardButton("...", callback_data='_'),]]
+    rmk = InlineKeyboardMarkup(k_board)
+    quiry.edit_message_text(text='Напиши название пакета: ', reply_markup=rmk)
+
+    return 'second_level'
+
+def single_package_post(update, _):
+    user_input = update.message.text
+    my_single_package = get_info_from_linux_single(my_comma=f'apt list | grep {user_input}')
+    update.message.reply_text(my_single_package)
+    return 'second_level'
+
+
+def single_service_get(update, _):
+    quiry = update.callback_query
+    quiry.answer()
+    k_board = [[InlineKeyboardButton("...", callback_data='_'),]]
+    rmk = InlineKeyboardMarkup(k_board)
+    quiry.edit_message_text(text='Напиши название службы: ', reply_markup=rmk)
+
+    return 'third_level'
+
+def single_service_post(update, _):
+    user_input = update.message.text
+    my_single_service = get_info_from_linux_single(my_comma=f'apt list | grep {user_input}')
+    update.message.reply_text(my_single_service)
+    return 'third_level'
 
 
 if __name__ == '__main__':
