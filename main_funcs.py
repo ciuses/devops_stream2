@@ -103,3 +103,7 @@ def check_pas(update: Update, context) -> int:
     else:
         update.message.reply_text('Впечатляет, всё как надо, обнимаю твои мысли, всё на созвоне.')
         return ConversationHandler.END
+
+
+def my_exit(update: Update, context) -> int:
+    return ConversationHandler.END

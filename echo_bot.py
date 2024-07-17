@@ -26,10 +26,14 @@ from linux_funcs import (linux_release,
                          single_package_get,
                          single_service_get,
                          single_package_post,
-                         single_service_post, linux_critical, linux_ps, linux_ss)
+                         single_service_post,
+                         linux_critical,
+                         linux_ps,
+                         linux_ss)
 
 from main_funcs import (echo,
                         start,
+                        my_exit,
                         my_help,
                         find_tel_numbers,
                         find_tel_numbers_command,
@@ -58,6 +62,7 @@ def run():
     '''Перехват команд'''
     start_handler = CommandHandler('start', start)
     help_handler = CommandHandler('help', my_help)
+    exit_handler = CommandHandler('exit', my_exit)
     linux_release_handler = CommandHandler('get_release', linux_release)
     linux_uname_handler = CommandHandler('get_uname', linux_uname)
     linux_uptime_handler = CommandHandler('get_uptime', linux_uptime)
@@ -74,19 +79,19 @@ def run():
     find_tel_numbers_handler = ConversationHandler(
         entry_points=[CommandHandler('find_tel_numbers', find_tel_numbers_command)],
         states={'find_tel_numbers': [MessageHandler(Filters.text & ~Filters.command, find_tel_numbers)], },
-        fallbacks=[])
+        fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога мыла'''
     find_emails_handler = ConversationHandler(
         entry_points=[CommandHandler('find_emails', find_emails_command)],
         states={'find_emails': [MessageHandler(Filters.text & ~Filters.command, find_emails)], },
-        fallbacks=[])
+        fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога пароля'''
     check_pas_handler = ConversationHandler(
         entry_points=[CommandHandler('verify_password', check_pas_command)],
         states={'check_pas': [MessageHandler(Filters.text & ~Filters.command, check_pas)], },
-        fallbacks=[])
+        fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога apt list'''
     apt_list_handler = ConversationHandler(
@@ -94,7 +99,7 @@ def run():
         states={'linux_apt_list_one': [MessageHandler(Filters.regex('^(Один)$'), linux_apt_list_one),
                                        MessageHandler(Filters.regex('^(Много)$'), linux_apt_list_many),
                                        MessageHandler(Filters.text, linux_apt_list_one_get)], },
-        fallbacks=[])
+        fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват деалога запроса пакетов и сервисов'''
     decision_tree = ConversationHandler(
@@ -107,7 +112,8 @@ def run():
                 'second_level': [MessageHandler(Filters.text & ~Filters.command, single_package_post),],
                 'third_level': [MessageHandler(Filters.text & ~Filters.command, single_service_post),]
                 },
-        fallbacks=[CommandHandler('packages_services', linux_packages_services)])
+        fallbacks=[CommandHandler('packages_services', linux_packages_services),
+                   CommandHandler('exit', my_exit)])
 
     '''Диспетчеры'''
     my_disp.add_handler(find_tel_numbers_handler)
@@ -116,6 +122,7 @@ def run():
 
     my_disp.add_handler(start_handler)
     my_disp.add_handler(help_handler)
+    my_disp.add_handler(exit_handler)
 
     '''Linux'''
     my_disp.add_handler(linux_release_handler)
