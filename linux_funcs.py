@@ -40,6 +40,11 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
 
         return norm_str
 
+def chank_it(input: str) -> list:
+    all_list = input.splitlines(keepends=True)
+    list_of_ten = [''.join(all_list[group:group + 15]) for group in range(0, len(all_list), 15)]
+    return list_of_ten
+
 def linux_release(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='lsb_release -a')
     update.message.reply_text(my_release)
@@ -82,7 +87,12 @@ def linux_ps(update: Update, _) -> None:
 
 def linux_ss(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ss')
-    update.message.reply_text(my_release)
+    if len(my_release) > 4096:
+        my_chanks = chank_it(my_release)
+        for one_chank in my_chanks:
+            update.message.reply_text(one_chank)
+    else:
+        update.message.reply_text(my_release)
 
 '''Другой концепт диалога где спрашиваешь уточнения.'''
 def linux_apt_list(update: Update, _):
@@ -152,7 +162,6 @@ def all_up_services(update, _):
     quiry.edit_message_text(text=my_up_services, reply_markup=rmk)
     return 'first_level'
 
-
 def single_package_get(update, _):
     quiry = update.callback_query
     quiry.answer()
@@ -167,7 +176,6 @@ def single_package_post(update, _):
     my_single_package = get_info_from_linux_single(my_comma=f'apt list --installed | grep {user_input}')
     update.message.reply_text(my_single_package)
     return 'second_level'
-
 
 def single_service_get(update, _):
     quiry = update.callback_query
