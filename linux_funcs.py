@@ -143,7 +143,14 @@ def all_install_packages(update, _):
 
     rmk = InlineKeyboardMarkup(k_board)
     my_all_packages = get_info_from_linux_single(my_comma='apt list --installed')
-    quiry.edit_message_text(text=my_all_packages, reply_markup=rmk)
+
+    if len(my_all_packages) > 4096:
+        my_chanks = chank_it(my_all_packages)
+        for one_chank in my_chanks:
+            quiry.edit_message_text(text=one_chank, reply_markup=rmk)
+    else:
+        quiry.edit_message_text(text=my_all_packages, reply_markup=rmk)
+
     return 'first_level'
 
 def all_up_services(update, _):
