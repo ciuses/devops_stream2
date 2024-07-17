@@ -18,7 +18,7 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
     cli.connect(hostname=ip, username=log, password=pa)
 
     if superuser:
-        raw_data = None
+        raw_data = None #TODO убрать, оно не надо
         with cli.invoke_shell() as terminal:
             time.sleep(1)
             terminal.send('su -l\n')
@@ -40,50 +40,51 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
 
         return norm_str
 
-def linux_release(update: Update, context) -> None:
+def linux_release(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='lsb_release -a')
     update.message.reply_text(my_release)
 
-def linux_uname(update: Update, context) -> None:
+def linux_uname(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='uname -a')
     update.message.reply_text(my_release)
 
-def linux_uptime(update: Update, context) -> None:
+def linux_uptime(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='uptime')
     update.message.reply_text(my_release)
 
-def linux_df(update: Update, context) -> None:
+def linux_df(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='df -h')
     update.message.reply_text(my_release)
 
-def linux_free(update: Update, context) -> None:
+def linux_free(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='free -h')
     update.message.reply_text(my_release)
 
-def linux_auths(update: Update, context) -> None:
+def linux_auths(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='last -n 10')
     update.message.reply_text(my_release)
 
-def linux_w(update: Update, context) -> None:
+def linux_w(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='w')
     update.message.reply_text(my_release)
 
-def linux_mpstat(update: Update, context) -> None:
+def linux_mpstat(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='mpstat')
     update.message.reply_text(my_release)
 
-def linux_critical(update: Update, context) -> None:
-    my_release = get_info_from_linux_single(my_comma='dmesg -H --level=err', superuser=True)
+def linux_critical(update: Update, _) -> None:
+    my_release = get_info_from_linux_single(my_comma='dmesg -H --level=err', superuser=True) # crit
     update.message.reply_text(my_release)
 
-def linux_ps(update: Update, context) -> None:
+def linux_ps(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ps')
     update.message.reply_text(my_release)
 
-def linux_ss(update: Update, context) -> None:
+def linux_ss(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ss')
     update.message.reply_text(my_release)
 
+'''Другой концепт диалога где спрашиваешь уточнения.'''
 def linux_apt_list(update: Update, _):
     replay_keyboard = [['Один', 'Много']]
     markup_keys = ReplyKeyboardMarkup(replay_keyboard, one_time_keyboard=True)
@@ -105,6 +106,7 @@ def linux_apt_list_many(update: Update, _): # выходит большой сп
     update.message.reply_text(my_release)
     return ConversationHandler.END
 
+'''Диалог через инлайн кнопки.'''
 def linux_packages_services(update, _):
 
     k_board = [
@@ -185,9 +187,5 @@ def single_service_post(update, _):
 
 
 if __name__ == '__main__':
-    # print(get_info_from_linux_single(my_comma='apt list | grep pip'))
-    # print(get_info_from_linux_single(my_comma='apt list'))
-    # print(get_info_from_linux_single(my_comma='mpstat'))
-    # print(get_info_from_linux_single(superuser=True))
-    # print(get_info_from_linux_many())
+
     print(get_info_from_linux_single(my_comma='ss'))
