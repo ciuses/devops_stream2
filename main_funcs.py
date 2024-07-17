@@ -5,14 +5,26 @@ from telegram.ext import ConversationHandler
 
 def start(update: Update, context) -> None:
     user = update.effective_user
-    update.message.reply_text(f'Дороу {user.first_name}')
+    update.message.reply_text(f'Привествую {user.first_name}, aka {user.username}, USER ID: {user.id}')
 
 def my_help(update: Update, context) -> None:
     help_str = ('/start - поприветствует\n'
                 '/help - список доступных команд\n'
                 '/find_tel_numbers - поиск телефона в тексте\n'
                 '/find_emails - поиск электронного адреса в тексте\n'
-                '/verify_password - валидация пароля')
+                '/verify_password - валидация пароля\n'
+                '/get_release - посмотреть релиз\n'
+                '/get_uname - архитектуру\n'
+                '/get_uptime - время работы\n'
+                '/get_df - место\n'
+                '/get_free - утилизация оперативки\n'
+                '/get_mpstat - производительность\n'
+                '/get_w - пользователи в системе\n'
+                '/get_auths - последние 10 юзеров\n'
+                '/get_critical - ошибки ядра\n'
+                '/get_ps - процессы\n'
+                '/get_ss - порты')
+
     update.message.reply_text(help_str)
 
 def echo(update: Update, context) -> None:

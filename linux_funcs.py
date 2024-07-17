@@ -72,6 +72,17 @@ def linux_mpstat(update: Update, context) -> None:
     my_release = get_info_from_linux_single(my_comma='mpstat')
     update.message.reply_text(my_release)
 
+def linux_critical(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='dmesg -H --level=err', superuser=True)
+    update.message.reply_text(my_release)
+
+def linux_ps(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='ps')
+    update.message.reply_text(my_release)
+
+def linux_ss(update: Update, context) -> None:
+    my_release = get_info_from_linux_single(my_comma='ss')
+    update.message.reply_text(my_release)
 
 def linux_apt_list(update: Update, _):
     replay_keyboard = [['Один', 'Много']]
@@ -175,7 +186,8 @@ def single_service_post(update, _):
 
 if __name__ == '__main__':
     # print(get_info_from_linux_single(my_comma='apt list | grep pip'))
-    print(get_info_from_linux_single(my_comma='apt list'))
+    # print(get_info_from_linux_single(my_comma='apt list'))
     # print(get_info_from_linux_single(my_comma='mpstat'))
     # print(get_info_from_linux_single(superuser=True))
     # print(get_info_from_linux_many())
+    print(get_info_from_linux_single(my_comma='ss'))

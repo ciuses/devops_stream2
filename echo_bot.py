@@ -26,7 +26,7 @@ from linux_funcs import (linux_release,
                          single_package_get,
                          single_service_get,
                          single_package_post,
-                         single_service_post)
+                         single_service_post, linux_critical, linux_ps, linux_ss)
 
 from main_funcs import (echo,
                         start,
@@ -63,9 +63,12 @@ def run():
     linux_uptime_handler = CommandHandler('get_uptime', linux_uptime)
     linux_df_handler = CommandHandler('get_df', linux_df)
     linux_free_handler = CommandHandler('get_free', linux_free)
-    linux_auths_handler = CommandHandler('get_auths', linux_auths)
-    linux_w_handler = CommandHandler('get_w', linux_w)
     linux_mpstat_handler = CommandHandler('get_mpstat', linux_mpstat)
+    linux_w_handler = CommandHandler('get_w', linux_w)
+    linux_auths_handler = CommandHandler('get_auths', linux_auths)
+    linux_critical_handler = CommandHandler('get_critical', linux_critical)
+    linux_ps_handler = CommandHandler('get_ps', linux_ps)
+    linux_ss_handler = CommandHandler('get_ss', linux_ss)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -123,6 +126,9 @@ def run():
     my_disp.add_handler(linux_auths_handler)
     my_disp.add_handler(linux_w_handler)
     my_disp.add_handler(linux_mpstat_handler)
+    my_disp.add_handler(linux_critical_handler)
+    my_disp.add_handler(linux_ps_handler)
+    my_disp.add_handler(linux_ss_handler)
     my_disp.add_handler(apt_list_handler)
     my_disp.add_handler(decision_tree)
 
