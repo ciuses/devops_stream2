@@ -134,39 +134,29 @@ def linux_packages_services(update, _):
 def all_install_packages(update, _):
     quiry = update.callback_query
     quiry.answer()
-
-    k_board = [
-        [InlineKeyboardButton('Получить список всех запущенных служб', callback_data='all_services'),],
-        [InlineKeyboardButton('Получить информацию о конкретном пакете', callback_data='single_package'),],
-        [InlineKeyboardButton('Получить информацию о конкретной службе', callback_data='single_service'),],
-    ]
-
-    rmk = InlineKeyboardMarkup(k_board)
     my_all_packages = get_info_from_linux_single(my_comma='apt list --installed')
 
     if len(my_all_packages) > 4096:
         my_chanks = chank_it(my_all_packages)
         for one_chank in my_chanks:
-            quiry.edit_message_text(text=one_chank, reply_markup=rmk)
+            quiry.message.reply_text(one_chank)
     else:
-        quiry.edit_message_text(text=my_all_packages, reply_markup=rmk)
+        quiry.message.reply_text(my_all_packages)
 
     return 'first_level'
 
 def all_up_services(update, _):
     quiry = update.callback_query
     quiry.answer()
+    my_all_services = get_info_from_linux_single(my_comma='systemctl list-units --type service --state running')
 
-    k_board = [
-        [InlineKeyboardButton('Получить список всех установленных пакетов', callback_data='all_packages'),],
-        [InlineKeyboardButton('Получить информацию о конкретном пакете', callback_data='single_package'),],
-        [InlineKeyboardButton('Получить информацию о конкретной службе', callback_data='single_service'),],
-    ]
+    if len(my_all_services) > 4096:
+        my_chanks = chank_it(my_all_services)
+        for one_chank in my_chanks:
+            quiry.message.reply_text(one_chank)
+    else:
+        quiry.message.reply_text(my_all_services)
 
-    rmk = InlineKeyboardMarkup(k_board)
-    my_up_services = get_info_from_linux_single(my_comma='systemctl list-units --type service --state running',
-                                                superuser=True)
-    quiry.edit_message_text(text=my_up_services, reply_markup=rmk)
     return 'first_level'
 
 def single_package_get(update, _):
