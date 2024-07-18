@@ -40,6 +40,11 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
         return norm_str
 
 def chank_it(input: str) -> list:
+    '''
+    Функция режет строку на строки и нарезает по 15 строк в писок.
+    :param input: Строка
+    :return: Список строк по 15
+    '''
     all_list = input.splitlines(keepends=True)
     list_of_ten = [''.join(all_list[group:group + 15]) for group in range(0, len(all_list), 15)]
     return list_of_ten
