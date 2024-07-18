@@ -23,7 +23,8 @@ def my_help(update: Update, context) -> None:
                 '/get_auths - последние 10 юзеров\n'
                 '/get_critical - ошибки ядра\n'
                 '/get_ps - процессы\n'
-                '/get_ss - порты')
+                '/get_ss - порты\n'
+                '/packages_services - установленные пакеты и службы ОС')
 
     update.message.reply_text(help_str)
 

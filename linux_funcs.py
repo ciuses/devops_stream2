@@ -18,7 +18,6 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
     cli.connect(hostname=ip, username=log, password=pa)
 
     if superuser:
-        raw_data = None #TODO убрать, оно не надо
         with cli.invoke_shell() as terminal:
             time.sleep(1)
             terminal.send('su -l\n')
