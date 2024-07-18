@@ -51,8 +51,6 @@ logging.basicConfig(filename='my_log.log',
 logger = logging.getLogger(__name__)
 
 
-
-
 def run():
     updater = Updater(TG_TOKEN, use_context=True)
     my_disp = updater.dispatcher
@@ -94,7 +92,7 @@ def run():
         fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога apt list'''
-    apt_list_handler = ConversationHandler(
+    apt_list_handler = ConversationHandler( #TODO выпилить этот блок, вместе с функциями, оно эксперементально
         entry_points=[CommandHandler('get_apt_list', linux_apt_list)],
         states={'linux_apt_list_one': [MessageHandler(Filters.regex('^(Один)$'), linux_apt_list_one),
                                        MessageHandler(Filters.regex('^(Много)$'), linux_apt_list_many),
@@ -145,7 +143,7 @@ def run():
     updater.idle()
 
 
-
 if __name__ == '__main__':
     run()
+    #TODO раскидать логирование
 

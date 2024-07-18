@@ -94,6 +94,7 @@ def linux_ss(update: Update, _) -> None:
         update.message.reply_text(my_release)
 
 '''Другой концепт диалога где спрашиваешь уточнения.'''
+#TODO выпилить этот блок, оно эксперементально
 def linux_apt_list(update: Update, _):
     replay_keyboard = [['Один', 'Много']]
     markup_keys = ReplyKeyboardMarkup(replay_keyboard, one_time_keyboard=True)
@@ -190,6 +191,6 @@ def single_service_post(update, _):
     return 'third_level'
 
 
-if __name__ == '__main__':
-
-    print(get_info_from_linux_single(my_comma='ss'))
+# if __name__ == '__main__':
+#
+#     print(get_info_from_linux_single(my_comma='ss'))
