@@ -41,7 +41,7 @@ def get_info_from_linux_single(my_comma = 'ls -la', superuser = False) -> str:
 
 def chank_it(input: str) -> list:
     '''
-    Функция режет строку на строки и нарезает по 15 строк в писок.
+    Функция режет строку на строки и нарезает по 15 строк в список.
     :param input: Строка
     :return: Список строк по 15
     '''
@@ -78,7 +78,7 @@ def linux_w(update: Update, _) -> None:
     update.message.reply_text(my_release)
 
 def linux_mpstat(update: Update, _) -> None:
-    my_release = get_info_from_linux_single(my_comma='mpstat')
+    my_release = get_info_from_linux_single(my_comma='top', superuser=True)
     update.message.reply_text(my_release)
 
 def linux_critical(update: Update, _) -> None:
