@@ -42,7 +42,6 @@ from main_funcs import (echo,
                         check_pas,
                         check_pas_command)
 
-
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
 logging.basicConfig(filename='my_log.log',
@@ -92,7 +91,7 @@ def run():
         fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога apt list'''
-    apt_list_handler = ConversationHandler( #TODO выпилить этот блок, вместе с функциями, оно эксперементально
+    apt_list_handler = ConversationHandler(  # TODO выпилить этот блок, вместе с функциями, оно эксперементально
         entry_points=[CommandHandler('get_apt_list', linux_apt_list)],
         states={'linux_apt_list_one': [MessageHandler(Filters.regex('^(Один)$'), linux_apt_list_one),
                                        MessageHandler(Filters.regex('^(Много)$'), linux_apt_list_many),
@@ -105,10 +104,10 @@ def run():
         states={'first_level': [CallbackQueryHandler(all_install_packages, pattern='^all_packages$'),
                                 CallbackQueryHandler(all_up_services, pattern='^all_services$'),
                                 CallbackQueryHandler(single_package_get, pattern='^single_package$'),
-                                CallbackQueryHandler(single_service_get, pattern='^single_service$'),],
+                                CallbackQueryHandler(single_service_get, pattern='^single_service$'), ],
 
-                'second_level': [MessageHandler(Filters.text & ~Filters.command, single_package_post),],
-                'third_level': [MessageHandler(Filters.text & ~Filters.command, single_service_post),]
+                'second_level': [MessageHandler(Filters.text & ~Filters.command, single_package_post), ],
+                'third_level': [MessageHandler(Filters.text & ~Filters.command, single_service_post), ]
                 },
         fallbacks=[CommandHandler('packages_services', linux_packages_services),
                    CommandHandler('exit', my_exit)])
@@ -145,7 +144,5 @@ def run():
 
 if __name__ == '__main__':
     run()
-    #TODO раскидать логирование
-    #TODO срезать чать ввводов у крит и mpstat
-
-
+    # TODO раскидать логирование
+    # TODO срезать чать ввводов у крит и mpstat

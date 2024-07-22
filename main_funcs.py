@@ -5,7 +5,8 @@ from telegram.ext import ConversationHandler
 
 def start(update: Update, context) -> None:
     user = update.effective_user
-    update.message.reply_text(f'Привествую {user.first_name}, aka {user.username}, USER ID: {user.id}')
+    update.message.reply_text(f'Приветствую {user.first_name}, aka {user.username}, USER ID: {user.id}')
+
 
 def my_help(update: Update, context) -> None:
     help_str = ('/start - поприветствует\n'
@@ -28,12 +29,15 @@ def my_help(update: Update, context) -> None:
 
     update.message.reply_text(help_str)
 
+
 def echo(update: Update, context) -> None:
     update.message.reply_text(update.message.text)
+
 
 def find_tel_numbers_command(update: Update, context) -> str:
     update.message.reply_text('Давай, где искать: ')
     return 'find_tel_numbers'
+
 
 def find_tel_numbers(update: Update, context) -> int:
     user_input = update.message.text
@@ -46,15 +50,17 @@ def find_tel_numbers(update: Update, context) -> int:
             str_numbers += f'{my_index + 1}.\t{find_result[my_index]}\n'
 
         update.message.reply_text(str_numbers)
-        return ConversationHandler.END # <class 'int'> -1
+        return ConversationHandler.END  # <class 'int'> -1
 
     else:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
+
 def find_emails_command(update: Update, context) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
     return 'find_emails'
+
 
 def find_emails(update: Update, context) -> int:
     user_input = update.message.text
@@ -73,12 +79,13 @@ def find_emails(update: Update, context) -> int:
         update.message.reply_text('Нет ни каких имэйлов!')
         return ConversationHandler.END
 
+
 def check_pas_command(update: Update, context) -> str:
     update.message.reply_text('Мне нужен твой байк, простите, пароль: ')
     return 'check_pas'
 
-def check_pas(update: Update, context) -> int:
 
+def check_pas(update: Update, context) -> int:
     user_input = update.message.text
 
     if not re.search(r'^.{8,}$', user_input):
