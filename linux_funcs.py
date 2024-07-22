@@ -79,15 +79,15 @@ def linux_w(update: Update, _) -> None:
 
 def linux_mpstat(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='top', superuser=True)
-    update.message.reply_text(my_release)
+    update.message.reply_text(my_release[461:])
 
 def linux_critical(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='dmesg -H --level=err', superuser=True) # crit
-    update.message.reply_text(my_release)
+    update.message.reply_text(my_release[461:])
 
 def linux_ps(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ps')
-    update.message.reply_text(my_release)
+    update.message.reply_text(my_release[461:])
 
 def linux_ss(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ss')
@@ -176,7 +176,15 @@ def single_package_get(update, _):
 def single_package_post(update, _):
     user_input = update.message.text
     my_single_package = get_info_from_linux_single(my_comma=f'apt list --installed | grep {user_input}')
-    update.message.reply_text(my_single_package)
+
+    if len(my_single_package) > 4096:
+        my_chanks = chank_it(my_single_package)
+        for one_chank in my_chanks:
+            update.message.reply_text(one_chank)
+    else:
+        update.message.reply_text(my_single_package)
+
+    # update.message.reply_text(my_single_package)
     return 'second_level'
 
 def single_service_get(update, _):
@@ -192,7 +200,7 @@ def single_service_post(update, _):
     user_input = update.message.text
     my_single_service = get_info_from_linux_single(my_comma=f'systemctl list-units --type service | grep {user_input}',
                                                    superuser=True)
-    update.message.reply_text(my_single_service)
+    update.message.reply_text(my_single_service[461:])
     return 'third_level'
 
 
