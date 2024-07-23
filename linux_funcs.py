@@ -97,7 +97,7 @@ def linux_critical(update: Update, _) -> None:
 
 def linux_ps(update: Update, _) -> None:
     my_release = get_info_from_linux_single(my_comma='ps')
-    update.message.reply_text(my_release[461:])
+    update.message.reply_text(my_release)
 
 
 def linux_ss(update: Update, _) -> None:
