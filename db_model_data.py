@@ -36,15 +36,39 @@ class Emails(Base):
     def __str__(self):
         return f'id={self.id}\nemail={self.email}'
 
+def create_tables(dsn='DSN'):
+    engine = alch.create_engine(dsn)
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+    return sessionmaker(bind=engine)
+
+def fill_the_base(session):
+    tel1 = Telephons(id=1, number='+79039533773')
+    tel2 = Telephons(id=2, number='+79999999999')
+    tel3 = Telephons(id=3, number='+7_000_000_0000')
+
+    email1 = Emails(id=1, email='ciuse@yandex.ru')
+    email2 = Emails(id=2, email='ciuse@mail.ru')
+    email3 = Emails(id=3, email='zzzzz@zzz.ru')
+
+    my_data = [tel1, tel2, tel3, email1, email2, email3]
+
+    my_sesion = session()
+    for dat in my_data:
+        my_sesion.add(dat)
+
+    my_sesion.commit()
+    my_sesion.close()
+
+
 if __name__ == '__main__':
     load_dotenv()
-    DSN = os.getenv('data_source_name')
     data_base_name = 'db_num_3'
-    create_base(dsn=DSN, b_name=data_base_name)
+    DSN = os.getenv('data_source_name')
     DNS_2 = (f"postgresql://{os.getenv('db_user')}:{os.getenv('db_pass')}@"
              f"{os.getenv('db_h')}:{os.getenv('db_po')}/{data_base_name}")
 
-
-    engine = alch.create_engine(DNS_2)
-    Base.metadata.create_all(engine)
+    create_base(dsn=DSN, b_name=data_base_name)
+    ses = create_tables(dsn=DNS_2)
+    fill_the_base(ses)
 
