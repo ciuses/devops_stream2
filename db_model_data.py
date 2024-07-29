@@ -56,9 +56,9 @@ def fill_the_base(session):
 
 def add_the_data(dsn='DSN'):
     my_se = Session(alch.create_engine(dsn))
-    any_tel = Telephons(number='+73333333333')
+    any_tel = Telephons(number='+72112221111')
     my_se.add(any_tel)
-    any_emeil = Emails(email='fhbdbdbfdda@ipyp.com')
+    any_emeil = Emails(email='adadaa@gkgkkgkygkg.com')
     my_se.add(any_emeil)
 
     my_se.commit()
@@ -76,9 +76,9 @@ if __name__ == '__main__':
     #создать базку
     # create_base(dsn=DSN, b_name=data_base_name)
     #создать таблички
-    ses = create_tables(dsn=DNS_2)
+    # ses = create_tables(dsn=DNS_2)
     #налить данных
-    fill_the_base(ses)
+    # fill_the_base(ses)
 
     add_the_data(dsn=DNS_2)
 

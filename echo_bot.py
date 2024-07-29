@@ -29,7 +29,8 @@ from linux_funcs import (linux_release,
                          single_service_post,
                          linux_critical,
                          linux_ps,
-                         linux_ss)
+                         linux_ss,
+                         linux_replica_log)
 
 from main_funcs import (echo,
                         start,
@@ -71,6 +72,8 @@ def run():
     linux_critical_handler = CommandHandler('get_critical', linux_critical)
     linux_ps_handler = CommandHandler('get_ps', linux_ps)
     linux_ss_handler = CommandHandler('get_ss', linux_ss)
+    '''Задание про базы '''
+    linux_replica_log_handler = CommandHandler('get_repl_logs', linux_replica_log)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -133,6 +136,8 @@ def run():
     my_disp.add_handler(linux_critical_handler)
     my_disp.add_handler(linux_ps_handler)
     my_disp.add_handler(linux_ss_handler)
+    '''Про базки'''
+    my_disp.add_handler(linux_replica_log_handler)
     my_disp.add_handler(apt_list_handler)
     my_disp.add_handler(decision_tree)
 

@@ -11,17 +11,22 @@ log = os.getenv('user')
 pa = os.getenv('pass')
 
 
-def get_info_from_linux_single(my_comma='ls -la', superuser=False) -> str:
+def get_info_from_linux_single(my_comma='ls -la',
+                               superuser=False,
+                               host=ip,
+                               login=log,
+                               password=pa,
+                               su_pass=pa) -> str:
     cli = paramiko.SSHClient()
     cli.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    cli.connect(hostname=ip, username=log, password=pa)
+    cli.connect(hostname=host, username=login, password=password)
 
     if superuser:
         with cli.invoke_shell() as terminal:
             time.sleep(1)
             terminal.send(b'su -l\n')
             time.sleep(1)
-            terminal.send(f'{pa}\n'.encode())
+            terminal.send(f'{su_pass}\n'.encode())
             time.sleep(2)
             terminal.send(f'{my_comma}\n'.encode())
             time.sleep(2)
@@ -228,6 +233,26 @@ def single_service_post(update, _):
     update.message.reply_text(my_single_service[461:])
     return 'third_level'
 
-# if __name__ == '__main__':
-#
-#     print(get_info_from_linux_single(my_comma='ss'))
+
+def linux_replica_log(update: Update, _) -> None:
+    my_com = 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'
+    log_15_str = get_info_from_linux_single(my_comma=my_com,
+                                            superuser=True,
+                                            host=os.getenv('v_host'),
+                                            login=os.getenv('v_user'),
+                                            password=os.getenv('v_pass'),
+                                            su_pass=os.getenv('v_su_pass'))
+    # print(log_15_str)
+    update.message.reply_text(log_15_str[495:])
+
+if __name__ == '__main__':
+    pass
+    # print(get_info_from_linux_single(my_comma='ss'))
+    # h = os.getenv('v_host')
+    # u = os.getenv('v_user')
+    # p = os.getenv('v_pass')
+    # sp = os.getenv('v_su_pass')
+    #
+    # print(get_info_from_linux_single(host=h, login=u, password=p, su_pass=sp))
+
+    # linux_replica_log()
