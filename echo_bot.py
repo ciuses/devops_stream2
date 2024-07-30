@@ -41,7 +41,9 @@ from main_funcs import (echo,
                         find_emails,
                         find_emails_command,
                         check_pas,
-                        check_pas_command)
+                        check_pas_command,
+                        get_from_the_database_emails,
+                        get_from_the_database_telephons)
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -74,6 +76,8 @@ def run():
     linux_ss_handler = CommandHandler('get_ss', linux_ss)
     '''Задание про базы '''
     linux_replica_log_handler = CommandHandler('get_repl_logs', linux_replica_log)
+    get_emails_handler = CommandHandler('get_emails', get_from_the_database_emails)
+    get_telephons_handler = CommandHandler('get_phone_numbers', get_from_the_database_telephons)
 
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
@@ -138,6 +142,9 @@ def run():
     my_disp.add_handler(linux_ss_handler)
     '''Про базки'''
     my_disp.add_handler(linux_replica_log_handler)
+    my_disp.add_handler(get_emails_handler)
+    my_disp.add_handler(get_telephons_handler)
+
     my_disp.add_handler(apt_list_handler)
     my_disp.add_handler(decision_tree)
 

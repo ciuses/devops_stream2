@@ -1,6 +1,7 @@
 import re
 from telegram import Update
 from telegram.ext import ConversationHandler
+from db_model_data import Emails, Telephons, select_from_tables
 
 
 def start(update: Update, context) -> None:
@@ -56,6 +57,20 @@ def find_tel_numbers(update: Update, context) -> int:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
+def get_from_the_database_telephons(update: Update, _):
+    query_tels = Telephons.id, Telephons.number
+    telphons = select_from_tables(many_data=query_tels)
+
+    if telphons:
+        str_tels = ''
+        for ind, tel in telphons:
+            str_tels += f'{ind}. {tel}\n'
+        update.message.reply_text(str_tels)
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('В базе пусто!')
+        return ConversationHandler.END
 
 def find_emails_command(update: Update, context) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
@@ -77,6 +92,21 @@ def find_emails(update: Update, context) -> int:
 
     else:
         update.message.reply_text('Нет ни каких имэйлов!')
+        return ConversationHandler.END
+
+def get_from_the_database_emails(update: Update, _):
+    query_emails = Emails.id, Emails.email
+    mails = select_from_tables(many_data=query_emails)
+
+    if mails:
+        str_emails = ''
+        for ind, email in mails:
+            str_emails += f'{ind}. {email}\n'
+        update.message.reply_text(str_emails)
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('В базе пусто!')
         return ConversationHandler.END
 
 
