@@ -1,6 +1,6 @@
 import os
 import sqlalchemy as alch
-from sqlalchemy import String
+from sqlalchemy import String, Select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from dotenv import load_dotenv
 
@@ -65,6 +65,14 @@ def add_the_data(dsn='DSN'):
     my_se.close()
 
 
+def select_from_tables(dsn: str = 'DSN', many_data: tuple = None) -> list:
+    list_of_rows = []
+    with Session(alch.create_engine(dsn)) as sess:
+        for rows in sess.execute(Select(*many_data)):
+            list_of_rows.append(rows)
+
+    return list_of_rows
+
 
 if __name__ == '__main__':
     load_dotenv()
@@ -80,6 +88,15 @@ if __name__ == '__main__':
     #налить данных
     # fill_the_base(ses)
 
-    add_the_data(dsn=DNS_2)
+    # add_the_data(dsn=DNS_2)
+
+    q_list_tel = Telephons.id, Telephons.number
+    q_list_em = Emails.id, Emails.email
+
+    tels = select_from_tables(dsn=DNS_2, many_data=q_list_tel)
+    mails = select_from_tables(dsn=DNS_2, many_data=q_list_em)
+    for r in tels:
+        print(r)
+    print(mails)
 
 
