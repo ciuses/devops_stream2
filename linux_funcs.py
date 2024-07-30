@@ -242,8 +242,8 @@ def linux_replica_log(update: Update, _) -> None:
                                             login=os.getenv('v_user'),
                                             password=os.getenv('v_pass'),
                                             su_pass=os.getenv('v_su_pass'))
-    # print(log_15_str)
-    update.message.reply_text(log_15_str[495:])
+
+    update.message.reply_text(f'<pre language="python">{log_15_str[495:]}</pre>', parse_mode='HTML')
 
 
 if __name__ == '__main__':

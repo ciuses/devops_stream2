@@ -85,11 +85,11 @@ def select_from_tables(dsn: str = DNS_2, many_data: tuple = None) -> list:
 
 
 if __name__ == '__main__':
-    # создать базку
+    '''создать базку'''
     # create_base(dsn=DSN, b_name=data_base_name)
-    # создать таблички
+    '''создать таблички'''
     # ses = create_tables(dsn=DNS_2)
-    # налить данных
+    '''налить данных'''
     # fill_the_base(ses)
     #
     # add_the_data(dsn=DNS_2)

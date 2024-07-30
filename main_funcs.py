@@ -65,7 +65,7 @@ def get_from_the_database_telephons(update: Update, _) -> int: # TODO добав
         str_tels = ''
         for ind, tel in telephons:
             str_tels += f'{ind}. {tel}\n'
-        update.message.reply_text(str_tels)
+        update.message.reply_text(f'<pre language="python">{str_tels}</pre>', parse_mode='HTML')
         return ConversationHandler.END
 
     else:
@@ -102,7 +102,7 @@ def get_from_the_database_emails(update: Update, _) -> int: # TODO добави�
         str_emails = ''
         for ind, email in mails:
             str_emails += f'{ind}. {email}\n'
-        update.message.reply_text(str_emails)
+        update.message.reply_text(f'<pre language="python">{str_emails}</pre>', parse_mode='HTML')
         return ConversationHandler.END
 
     else:
