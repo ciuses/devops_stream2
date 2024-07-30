@@ -4,14 +4,21 @@ from sqlalchemy import String, Select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, Session
 from dotenv import load_dotenv
 
+load_dotenv()
+DSN = os.getenv('data_source_name')
+data_base_name = 'db_num_3'
+DNS_2 = (f"postgresql://{os.getenv('db_user')}:{os.getenv('db_pass')}@"
+         f"{os.getenv('db_h')}:{os.getenv('db_po')}/{data_base_name}")
 
-def create_base(dsn='DSN', b_name='base_name'):
+
+def create_base(dsn=DSN, b_name='base_name'):
     with alch.create_engine(dsn, isolation_level='AUTOCOMMIT').connect() as con:
         con.execute(alch.sql.text(f'CREATE DATABASE {b_name}'))
 
 
 class Base(DeclarativeBase):
     pass
+
 
 class Telephons(Base):
     __tablename__ = 't_numbers'
@@ -22,7 +29,7 @@ class Telephons(Base):
         return f'id={self.id}\nnumber={self.number}'
 
 
-class Emails(Base): # todo переписать email на address
+class Emails(Base):  # todo переписать email на address
     __tablename__ = 'emails'
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     email: Mapped[str] = mapped_column(String(160), nullable=False)
@@ -30,11 +37,13 @@ class Emails(Base): # todo переписать email на address
     def __repr__(self) -> str:
         return f'id={self.id}\nemail={self.email}'
 
-def create_tables(dsn='DSN'):
+
+def create_tables(dsn=DNS_2):
     engine = alch.create_engine(dsn)
-    Base.metadata.drop_all(engine) # можно не дропать базки
+    Base.metadata.drop_all(engine)  # можно не дропать базки
     Base.metadata.create_all(engine)
     return Session(engine)
+
 
 def fill_the_base(session):
     tel1 = Telephons(number='+79039533663')
@@ -54,7 +63,8 @@ def fill_the_base(session):
     session.commit()
     session.close()
 
-def add_the_data(dsn='DSN'):
+
+def add_the_data(dsn=DNS_2):
     my_se = Session(alch.create_engine(dsn))
     any_tel = Telephons(number='+72112221111')
     my_se.add(any_tel)
@@ -65,7 +75,7 @@ def add_the_data(dsn='DSN'):
     my_se.close()
 
 
-def select_from_tables(dsn: str = 'DSN', many_data: tuple = None) -> list:
+def select_from_tables(dsn: str = DNS_2, many_data: tuple = None) -> list:
     list_of_rows = []
     with Session(alch.create_engine(dsn)) as sess:
         for rows in sess.execute(Select(*many_data)):
@@ -75,19 +85,13 @@ def select_from_tables(dsn: str = 'DSN', many_data: tuple = None) -> list:
 
 
 if __name__ == '__main__':
-    load_dotenv()
-    data_base_name = 'db_num_3'
-    DSN = os.getenv('data_source_name')
-    DNS_2 = (f"postgresql://{os.getenv('db_user')}:{os.getenv('db_pass')}@"
-             f"{os.getenv('db_h')}:{os.getenv('db_po')}/{data_base_name}")
-
-    #создать базку
+    # создать базку
     # create_base(dsn=DSN, b_name=data_base_name)
-    #создать таблички
+    # создать таблички
     # ses = create_tables(dsn=DNS_2)
-    #налить данных
+    # налить данных
     # fill_the_base(ses)
-
+    #
     # add_the_data(dsn=DNS_2)
 
     q_list_tel = Telephons.id, Telephons.number
@@ -98,5 +102,3 @@ if __name__ == '__main__':
     for r in tels:
         print(r)
     print(mails)
-
-
