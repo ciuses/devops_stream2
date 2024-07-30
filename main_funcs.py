@@ -4,12 +4,12 @@ from telegram.ext import ConversationHandler
 from db_model_data import Emails, Telephons, select_from_tables
 
 
-def start(update: Update, context) -> None:
+def start(update: Update, _) -> None:
     user = update.effective_user
     update.message.reply_text(f'Приветствую {user.first_name}, aka {user.username}, USER ID: {user.id}')
 
 
-def my_help(update: Update, context) -> None:
+def my_help(update: Update, _) -> None:
     help_str = ('/start - поприветствует\n'
                 '/help - список доступных команд\n'
                 '/find_tel_numbers - поиск телефона в тексте\n'
@@ -31,16 +31,16 @@ def my_help(update: Update, context) -> None:
     update.message.reply_text(help_str)
 
 
-def echo(update: Update, context) -> None:
+def echo(update: Update, _) -> None:
     update.message.reply_text(update.message.text)
 
 
-def find_tel_numbers_command(update: Update, context) -> str:
+def find_tel_numbers_command(update: Update, _) -> str:
     update.message.reply_text('Давай, где искать: ')
     return 'find_tel_numbers'
 
 
-def find_tel_numbers(update: Update, context) -> int:
+def find_tel_numbers(update: Update, _) -> int:
     user_input = update.message.text
     find_pat = re.compile(r'[\+7|8][\d(\s-]*[\d)\s]*')  # [\+7|8][\d(\s-]*[\d)\s]*
     find_result = find_pat.findall(user_input)
@@ -59,11 +59,11 @@ def find_tel_numbers(update: Update, context) -> int:
 
 def get_from_the_database_telephons(update: Update, _):
     query_tels = Telephons.id, Telephons.number
-    telphons = select_from_tables(many_data=query_tels)
+    telephons = select_from_tables(many_data=query_tels)
 
-    if telphons:
+    if telephons:
         str_tels = ''
-        for ind, tel in telphons:
+        for ind, tel in telephons:
             str_tels += f'{ind}. {tel}\n'
         update.message.reply_text(str_tels)
         return ConversationHandler.END
@@ -72,12 +72,12 @@ def get_from_the_database_telephons(update: Update, _):
         update.message.reply_text('В базе пусто!')
         return ConversationHandler.END
 
-def find_emails_command(update: Update, context) -> str:
+def find_emails_command(update: Update, _) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
     return 'find_emails'
 
 
-def find_emails(update: Update, context) -> int:
+def find_emails(update: Update, _) -> int:
     user_input = update.message.text
     find_pat = re.compile(r'[\w\.-]+@[\w-]+\.[a-zа-я]{2,9}')
     find_result = find_pat.findall(user_input)
@@ -110,12 +110,12 @@ def get_from_the_database_emails(update: Update, _):
         return ConversationHandler.END
 
 
-def check_pas_command(update: Update, context) -> str:
+def check_pas_command(update: Update, _) -> str:
     update.message.reply_text('Мне нужен твой байк, простите, пароль: ')
     return 'check_pas'
 
 
-def check_pas(update: Update, context) -> int:
+def check_pas(update: Update, _) -> int:
     user_input = update.message.text
 
     if not re.search(r'^.{8,}$', user_input):
@@ -143,5 +143,5 @@ def check_pas(update: Update, context) -> int:
         return ConversationHandler.END
 
 
-def my_exit(update: Update, context) -> int:
+def my_exit(update: Update, _) -> int:
     return ConversationHandler.END
