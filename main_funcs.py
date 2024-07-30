@@ -57,7 +57,8 @@ def find_tel_numbers(update: Update, _) -> int:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
-def get_from_the_database_telephons(update: Update, _) -> int: # TODO добавить elif для строк более 4096
+
+def get_from_the_database_telephons(update: Update, _) -> int:  # TODO добавить elif для строк более 4096
     query_tels = Telephons.id, Telephons.number
     telephons = select_from_tables(many_data=query_tels)
 
@@ -71,6 +72,7 @@ def get_from_the_database_telephons(update: Update, _) -> int: # TODO добав
     else:
         update.message.reply_text('В базе пусто!')
         return ConversationHandler.END
+
 
 def find_emails_command(update: Update, _) -> str:
     update.message.reply_text('Ладно уж, по ищу ка я твои имэйлы: ')
@@ -94,7 +96,8 @@ def find_emails(update: Update, _) -> int:
         update.message.reply_text('Нет ни каких имэйлов!')
         return ConversationHandler.END
 
-def get_from_the_database_emails(update: Update, _) -> int: # TODO добавить elif для строк более 4096
+
+def get_from_the_database_emails(update: Update, _) -> int:  # TODO добавить elif для строк более 4096
     query_emails = Emails.id, Emails.email
     mails = select_from_tables(many_data=query_emails)
 
