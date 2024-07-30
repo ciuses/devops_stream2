@@ -11,7 +11,7 @@ DNS_2 = (f"postgresql://{os.getenv('db_user')}:{os.getenv('db_pass')}@"
          f"{os.getenv('db_h')}:{os.getenv('db_po')}/{data_base_name}")
 
 
-def create_base(dsn=DSN, b_name='base_name'):
+def create_base(dsn: str = DSN, b_name='base_name') -> None:
     with alch.create_engine(dsn, isolation_level='AUTOCOMMIT').connect() as con:
         con.execute(alch.sql.text(f'CREATE DATABASE {b_name}'))
 
@@ -38,14 +38,14 @@ class Emails(Base):  # todo переписать email на address
         return f'id={self.id}\nemail={self.email}'
 
 
-def create_tables(dsn=DNS_2):
+def create_tables(dsn: str = DNS_2) -> object:
     engine = alch.create_engine(dsn)
     Base.metadata.drop_all(engine)  # можно не дропать базки
     Base.metadata.create_all(engine)
     return Session(engine)
 
 
-def fill_the_base(session):
+def fill_the_base(session) -> None:
     tel1 = Telephons(number='+79039533663')
     tel2 = Telephons(number='+79999999999')
     tel3 = Telephons(number='+70000000000')
@@ -64,7 +64,7 @@ def fill_the_base(session):
     session.close()
 
 
-def add_the_data(dsn=DNS_2):
+def add_the_data(dsn: str = DNS_2) -> None:
     my_se = Session(alch.create_engine(dsn))
     any_tel = Telephons(number='+72112221111')
     my_se.add(any_tel)

@@ -53,7 +53,7 @@ logging.basicConfig(filename='my_log.log',
 logger = logging.getLogger(__name__)
 
 
-def run():
+def run() -> None:
     updater = Updater(TG_TOKEN, use_context=True)
     my_disp = updater.dispatcher
 
@@ -157,4 +157,3 @@ def run():
 if __name__ == '__main__':
     run()
     # TODO раскидать логирование
-

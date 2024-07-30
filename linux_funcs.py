@@ -119,26 +119,26 @@ def linux_ss(update: Update, _) -> None:
 
 
 # TODO выпилить этот блок, оно эксперементально
-def linux_apt_list(update: Update, _):
+def linux_apt_list(update: Update, _) -> str:
     replay_keyboard = [['Один', 'Много']]
     markup_keys = ReplyKeyboardMarkup(replay_keyboard, one_time_keyboard=True)
     update.message.reply_text('Выбери режим, одного пакета или много?', reply_markup=markup_keys, )
     return 'linux_apt_list_one'
 
 
-def linux_apt_list_one(update: Update, _):
+def linux_apt_list_one(update: Update, _) -> str:
     update.message.reply_text('Введи название пакета', reply_markup=ReplyKeyboardRemove(), )
     return 'linux_apt_list_one'
 
 
-def linux_apt_list_one_get(update: Update, _):
+def linux_apt_list_one_get(update: Update, _) -> int:
     user_input = update.message.text
     my_release = get_info_from_linux_single(my_comma=f'apt list | grep {user_input}')
     update.message.reply_text(my_release)
     return ConversationHandler.END
 
 
-def linux_apt_list_many(update: Update, _):  # выходит большой список
+def linux_apt_list_many(update: Update, _) -> int:  # выходит большой список
     my_release = get_info_from_linux_single(my_comma='apt list')
     update.message.reply_text(my_release)
     return ConversationHandler.END
@@ -147,7 +147,7 @@ def linux_apt_list_many(update: Update, _):  # выходит большой с�
 '''Диалог через инлайн кнопки.'''
 
 
-def linux_packages_services(update, _):
+def linux_packages_services(update, _) -> str:
     k_board = [
         [InlineKeyboardButton('Получить список всех установленных пакетов', callback_data='all_packages')],
         [InlineKeyboardButton('Получить список всех запущенных служб', callback_data='all_services'), ],
@@ -161,7 +161,7 @@ def linux_packages_services(update, _):
     return 'first_level'
 
 
-def all_install_packages(update, _):
+def all_install_packages(update, _) -> str:
     quiry = update.callback_query
     quiry.answer()
     my_all_packages = get_info_from_linux_single(my_comma='apt list --installed')
@@ -176,7 +176,7 @@ def all_install_packages(update, _):
     return 'first_level'
 
 
-def all_up_services(update, _):
+def all_up_services(update, _) -> str:
     quiry = update.callback_query
     quiry.answer()
     my_all_services = get_info_from_linux_single(my_comma='systemctl list-units --type service --state running')
@@ -191,7 +191,7 @@ def all_up_services(update, _):
     return 'first_level'
 
 
-def single_package_get(update, _):
+def single_package_get(update, _) -> str:
     quiry = update.callback_query
     quiry.answer()
     k_board = [[InlineKeyboardButton("...", callback_data='_'), ]]
@@ -201,7 +201,7 @@ def single_package_get(update, _):
     return 'second_level'
 
 
-def single_package_post(update, _):
+def single_package_post(update, _) -> str:
     user_input = update.message.text
     my_single_package = get_info_from_linux_single(my_comma=f'apt list --installed | grep {user_input}')
 
@@ -216,7 +216,7 @@ def single_package_post(update, _):
     return 'second_level'
 
 
-def single_service_get(update, _):
+def single_service_get(update, _) -> str:
     quiry = update.callback_query
     quiry.answer()
     k_board = [[InlineKeyboardButton("...", callback_data='_'), ]]
@@ -226,7 +226,7 @@ def single_service_get(update, _):
     return 'third_level'
 
 
-def single_service_post(update, _):
+def single_service_post(update, _) -> str:
     user_input = update.message.text
     my_single_service = get_info_from_linux_single(my_comma=f'systemctl list-units --type service | grep {user_input}',
                                                    superuser=True)
@@ -244,6 +244,7 @@ def linux_replica_log(update: Update, _) -> None:
                                             su_pass=os.getenv('v_su_pass'))
     # print(log_15_str)
     update.message.reply_text(log_15_str[495:])
+
 
 if __name__ == '__main__':
     pass
