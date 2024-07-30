@@ -24,7 +24,7 @@ def get_info_from_linux_single(my_comma='ls -la',
     if superuser:
         with cli.invoke_shell() as terminal:
             time.sleep(1)
-            terminal.send(b'su -l\n')
+            terminal.send(b'su --login\n')
             time.sleep(1)
             terminal.send(f'{su_pass}\n'.encode())
             time.sleep(2)
