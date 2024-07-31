@@ -43,7 +43,7 @@ from main_funcs import (echo,
                         check_pas,
                         check_pas_command,
                         get_from_the_database_emails,
-                        get_from_the_database_telephons)
+                        get_from_the_database_telephons, write_tel_numbers)
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -82,7 +82,8 @@ def run() -> None:
     '''Перехват диалога тела'''
     find_tel_numbers_handler = ConversationHandler(
         entry_points=[CommandHandler('find_tel_numbers', find_tel_numbers_command)],
-        states={'find_tel_numbers': [MessageHandler(Filters.text & ~Filters.command, find_tel_numbers)], },
+        states={'find_tel_numbers': [MessageHandler(Filters.text & ~Filters.command, find_tel_numbers)],
+                'telephone_step': [MessageHandler(Filters.regex('Да|да'), write_tel_numbers)], },
         fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога мыла'''

@@ -1,8 +1,11 @@
 import re
 from telegram import Update
 from telegram.ext import ConversationHandler
-from db_model_data import Emails, Telephons, select_from_tables
+from db_model_data import Emails, Telephons, select_from_tables, add_telephons, add_emails
 
+
+telephons_string = None
+emails_string = None
 
 def start(update: Update, _) -> None:
     user = update.effective_user
@@ -40,7 +43,7 @@ def find_tel_numbers_command(update: Update, _) -> str:
     return 'find_tel_numbers'
 
 
-def find_tel_numbers(update: Update, _) -> int:
+def find_tel_numbers(update: Update, _) -> int | str:
     user_input = update.message.text
     find_pat = re.compile(r'[\+7|8][\d(\s-]*[\d)\s]*')  # [\+7|8][\d(\s-]*[\d)\s]*
     find_result = find_pat.findall(user_input)
@@ -51,12 +54,35 @@ def find_tel_numbers(update: Update, _) -> int:
             str_numbers += f'{my_index + 1}.\t{find_result[my_index]}\n'
 
         update.message.reply_text(str_numbers)
-        return ConversationHandler.END  # <class 'int'> -1
+        global telephons_string # запретная магия, за такое наказывают
+        telephons_string = str_numbers
+        update.message.reply_text('Хотелось бы Вам любезнейший, сохранить результаты в базку?')
+        # return ConversationHandler.END  # <class 'int'> -1
+        return 'telephone_step'
 
     else:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
+def write_tel_numbers(update: Update, _):
+    if telephons_string:
+        list_of_tels = telephons_string.splitlines(keepends=True)
+
+        for num in list_of_tels:
+            _, tel = num.split('\t')
+            clean_num = tel.replace('\n', '')
+            add_telephons(my_num=clean_num)
+
+        update.message.reply_text('Хорошо, сохраняю!')
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('Нет номеров!')
+        return ConversationHandler.END
+
+
+def write_tel_emails(update: Update, _):
+    pass
 
 def get_from_the_database_telephons(update: Update, _) -> int:  # TODO добавить elif для строк более 4096
     query_tels = Telephons.id, Telephons.number

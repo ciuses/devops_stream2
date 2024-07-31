@@ -75,6 +75,20 @@ def add_the_data(dsn: str = DNS_2) -> None:
     my_se.close()
 
 
+def add_telephons(dsn: str = DNS_2, my_num: str = '+79999999999') -> None:
+    my_se = Session(alch.create_engine(dsn))
+    any_tel = Telephons(number=my_num)
+    my_se.add(any_tel)
+    my_se.commit()
+    my_se.close()
+
+def add_emails(dsn: str = DNS_2, my_ema: str = 'zzz@zzz.com') -> None:
+    my_se = Session(alch.create_engine(dsn))
+    any_emeil = Emails(email=my_ema)
+    my_se.add(any_emeil)
+    my_se.commit()
+    my_se.close()
+
 def select_from_tables(dsn: str = DNS_2, many_data: tuple = None) -> list:
     list_of_rows = []
     with Session(alch.create_engine(dsn)) as sess:
