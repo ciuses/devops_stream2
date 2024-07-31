@@ -43,7 +43,9 @@ from main_funcs import (echo,
                         check_pas,
                         check_pas_command,
                         get_from_the_database_emails,
-                        get_from_the_database_telephons, write_tel_numbers)
+                        get_from_the_database_telephons,
+                        write_tel_numbers,
+                        write_emails)
 
 load_dotenv()
 TG_TOKEN = os.getenv('ciuse_bot')
@@ -89,7 +91,8 @@ def run() -> None:
     '''Перехват диалога мыла'''
     find_emails_handler = ConversationHandler(
         entry_points=[CommandHandler('find_emails', find_emails_command)],
-        states={'find_emails': [MessageHandler(Filters.text & ~Filters.command, find_emails)], },
+        states={'find_emails': [MessageHandler(Filters.text & ~Filters.command, find_emails)],
+                'email_step': [MessageHandler(Filters.regex('Да|да'), write_emails)], },
         fallbacks=[CommandHandler('exit', my_exit)])
 
     '''Перехват диалога пароля'''

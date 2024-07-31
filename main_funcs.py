@@ -53,7 +53,7 @@ def find_tel_numbers(update: Update, _) -> int | str:
         for my_index in range(len(find_result)):
             str_numbers += f'{my_index + 1}.\t{find_result[my_index]}\n'
 
-        update.message.reply_text(str_numbers)
+        update.message.reply_text(f'<pre language="python">{str_numbers}</pre>', parse_mode='HTML')
         global telephons_string # запретная магия, за такое наказывают
         telephons_string = str_numbers
         update.message.reply_text('Хотелось бы Вам любезнейший, сохранить результаты в базку?')
@@ -81,8 +81,6 @@ def write_tel_numbers(update: Update, _):
         return ConversationHandler.END
 
 
-def write_tel_emails(update: Update, _):
-    pass
 
 def get_from_the_database_telephons(update: Update, _) -> int:  # TODO добавить elif для строк более 4096
     query_tels = Telephons.id, Telephons.number
@@ -105,7 +103,7 @@ def find_emails_command(update: Update, _) -> str:
     return 'find_emails'
 
 
-def find_emails(update: Update, _) -> int:
+def find_emails(update: Update, _) -> int | str:
     user_input = update.message.text
     find_pat = re.compile(r'[\w\.-]+@[\w-]+\.[a-zа-я]{2,9}')
     find_result = find_pat.findall(user_input)
@@ -115,11 +113,31 @@ def find_emails(update: Update, _) -> int:
         for my_index, email in enumerate(find_result, start=1):
             str_numbers += f'{my_index}.\t{email}\n'
 
-        update.message.reply_text(str_numbers)
-        return ConversationHandler.END
+        update.message.reply_text(f'<pre language="python">{str_numbers}</pre>', parse_mode='HTML')
+        global emails_string
+        emails_string = str_numbers
+        update.message.reply_text('Хотелось бы Вам любезнейший, сохранить результаты в базку?')
+        return 'email_step'
 
     else:
         update.message.reply_text('Нет ни каких имэйлов!')
+        return ConversationHandler.END
+
+
+def write_emails(update: Update, _):
+    if emails_string:
+        list_of_emails = emails_string.splitlines(keepends=True)
+
+        for ema in list_of_emails:
+            _, email = ema.split('\t')
+            clean_email = email.replace('\n', '')
+            add_emails(my_ema=clean_email)
+
+        update.message.reply_text('Хорошо, сохраняю!')
+        return ConversationHandler.END
+
+    else:
+        update.message.reply_text('Нет имейлов!')
         return ConversationHandler.END
 
 
