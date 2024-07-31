@@ -15,6 +15,7 @@ def start(update: Update, _) -> None:
 def my_help(update: Update, _) -> None:
     help_str = ('/start - поприветствует\n'
                 '/help - список доступных команд\n'
+                '/exit - выход, если застрял\n'
                 '/find_tel_numbers - поиск телефона в тексте\n'
                 '/find_emails - поиск электронного адреса в тексте\n'
                 '/verify_password - валидация пароля\n'
@@ -29,7 +30,10 @@ def my_help(update: Update, _) -> None:
                 '/get_critical - ошибки ядра\n'
                 '/get_ps - процессы\n'
                 '/get_ss - порты\n'
-                '/packages_services - установленные пакеты и службы ОС')
+                '/packages_services - установленные пакеты и службы ОС\n'
+                '/get_repl_logs - логи реплики\n'
+                '/get_emails - получить имейлы из базы\n'
+                '/get_phone_numbers - получить номера')
 
     update.message.reply_text(help_str)
 
@@ -64,14 +68,18 @@ def find_tel_numbers(update: Update, _) -> int | str:
         update.message.reply_text('Нет номеров!')
         return ConversationHandler.END
 
-def write_tel_numbers(update: Update, _):
+def write_tel_numbers(update: Update, _) -> int:
     if telephons_string:
         list_of_tels = telephons_string.splitlines(keepends=True)
 
         for num in list_of_tels:
             _, tel = num.split('\t')
             clean_num = tel.replace('\n', '')
-            add_telephons(my_num=clean_num)
+
+            try:
+                add_telephons(my_num=clean_num)
+            except Exception as exp:
+                update.message.reply_text(exp)
 
         update.message.reply_text('Хорошо, сохраняю!')
         return ConversationHandler.END
@@ -124,14 +132,17 @@ def find_emails(update: Update, _) -> int | str:
         return ConversationHandler.END
 
 
-def write_emails(update: Update, _):
+def write_emails(update: Update, _) -> int:
     if emails_string:
         list_of_emails = emails_string.splitlines(keepends=True)
 
         for ema in list_of_emails:
             _, email = ema.split('\t')
             clean_email = email.replace('\n', '')
-            add_emails(my_ema=clean_email)
+            try:
+                add_emails(my_ema=clean_email)
+            except Exception as exp:
+                update.message.reply_text(exp)
 
         update.message.reply_text('Хорошо, сохраняю!')
         return ConversationHandler.END
