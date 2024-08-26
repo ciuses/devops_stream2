@@ -248,6 +248,7 @@ def linux_replica_log(update: Update, _) -> None:
 def linux_replica_log2(update: Update, _) -> None:
     my_command = "su -c 'cat /tmp/postgresql-my.log'"
     data = os.system(my_command)
+    print(data)
     update.message.reply_text(f'<pre language="python">{data}</pre>', parse_mode='HTML')
 
 
