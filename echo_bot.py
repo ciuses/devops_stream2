@@ -8,6 +8,7 @@ from telegram.ext import (Updater,
                           ConversationHandler,
                           CallbackQueryHandler)
 
+from db_model_data import create_tables
 from linux_funcs import (linux_release,
                          linux_df,
                          linux_free,
@@ -159,5 +160,6 @@ def run() -> None:
 
 
 if __name__ == '__main__':
+    create_tables()
     run()
     # TODO раскидать логирование
