@@ -31,7 +31,7 @@ from linux_funcs import (linux_release,
                          linux_critical,
                          linux_ps,
                          linux_ss,
-                         linux_replica_log)
+                         linux_replica_log2)
 
 from main_funcs import (echo,
                         start,
@@ -78,7 +78,7 @@ def run() -> None:
     linux_ps_handler = CommandHandler('get_ps', linux_ps)
     linux_ss_handler = CommandHandler('get_ss', linux_ss)
     '''Задание про базы '''
-    linux_replica_log_handler = CommandHandler('get_repl_logs', linux_replica_log)
+    linux_replica_log_handler = CommandHandler('get_repl_logs', linux_replica_log2)
     get_emails_handler = CommandHandler('get_emails', get_from_the_database_emails)
     get_telephons_handler = CommandHandler('get_phone_numbers', get_from_the_database_telephons)
 
