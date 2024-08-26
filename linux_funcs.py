@@ -248,7 +248,7 @@ def linux_replica_log(update: Update, _) -> None:
 def linux_replica_log2(update: Update, _) -> None:
     my_data = os.system('tail /tmp/postgresql-my.log')
     print(my_data)
-    update.message.reply_text(f'<pre language="python">{my_data}</pre>', parse_mode='HTML')
+    update.message.reply_text(f'<pre language="python">test test test</pre>', parse_mode='HTML')
 
 
 if __name__ == '__main__':
