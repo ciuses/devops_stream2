@@ -247,7 +247,7 @@ def linux_replica_log(update: Update, _) -> None:
     update.message.reply_text(f'<pre language="python">{log_15_str[495:]}</pre>', parse_mode='HTML')
 
 def linux_replica_log2(update: Update, _) -> None:
-    my_data = subprocess.run(["tail", "/tmp/postgresql-my.log"])
+    my_data = subprocess.run(["tail", "/tmp/postgresql-my.log"], capture_output=True)
     update.message.reply_text(f'<pre language="python">{my_data.stdout.decode()}</pre>', parse_mode='HTML')
 
 
