@@ -236,7 +236,8 @@ def single_service_post(update, _) -> str:
 
 def linux_replica_log(update: Update, _) -> None:
     my_com = 'tail -n 15 /var/log/postgresql/postgresql-15-main.log'
-    log_15_str = get_info_from_linux_single(my_comma=my_com,
+    my_com2 = 'docker logs m_base -n 30'
+    log_15_str = get_info_from_linux_single(my_comma=my_com2,
                                             superuser=True,
                                             host=os.getenv('v_host'),
                                             login=os.getenv('v_user'),
