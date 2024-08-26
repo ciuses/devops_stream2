@@ -246,10 +246,9 @@ def linux_replica_log(update: Update, _) -> None:
     update.message.reply_text(f'<pre language="python">{log_15_str[495:]}</pre>', parse_mode='HTML')
 
 def linux_replica_log2(update: Update, _) -> None:
-    my_command = 'tail /tmp/postgresql-my.log'
-    data = os.system(my_command)
-    print(data)
-    update.message.reply_text(f'<pre language="python">{data}</pre>', parse_mode='HTML')
+    my_data = os.system('tail /tmp/postgresql-my.log')
+    print(my_data)
+    update.message.reply_text(f'<pre language="python">{my_data}</pre>', parse_mode='HTML')
 
 
 if __name__ == '__main__':
